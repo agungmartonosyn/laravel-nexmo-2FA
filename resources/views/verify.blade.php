@@ -24,7 +24,8 @@
                             <label for="code" class="col-md-4 col-form-label text-md-right">Code</label>
 
                             <div class="col-md-6">
-                                <input id="code" type="number" class="form-control @error('code') is-invalid @enderror" name="code" value="{{ old('code') }}" required>
+                                <input id="code" type="number" class="form-control @error('code') is-invalid @enderror"
+                                    name="code" value="{{ old('code') }}" required>
 
                                 @error('code')
                                 <span class="invalid-feedback" role="alert">
@@ -41,9 +42,19 @@
                                 </button>
                             </div>
                         </div>
-                        <a class="btn btn-link" href="{{ route('resend_sms') }}">
-                            Resend Sms
-                        </a>
+
+                        <br>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Resend OTP</label>
+
+                            <div class="col-md-6">
+                                <input id="timer" type="hidden">
+                                <a  href="{{ route('resend_sms') }}" class="btn btn-primary" id="download" disabled>
+                                </a>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -51,3 +62,39 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+<script>
+    let timerOn = true;
+    var downloadButton = document.getElementById("download");
+    downloadButton.innerHTML = "You can Resend in 5 seconds.";
+    var id;
+
+    function timer(remaining) {
+        var m = Math.floor(remaining / 60);
+        var s = remaining % 60;
+
+        m = m < 10 ? '0' + m : m;
+        s = s < 10 ? '0' + s : s;
+        document.getElementById('timer').innerHTML = m + ':' + s;
+        downloadButton.innerHTML = "You can Resend in " + m + ':' + s + " seconds.";
+        remaining -= 1;
+
+        if (remaining >= 0 && timerOn) {
+            setTimeout(function () {
+                timer(remaining);
+            }, 1000);
+            return;
+        }
+
+        if (!timerOn) {
+            return;
+        }
+
+        downloadButton.innerHTML = "Resend SMS";
+        downloadButton.removeAttribute('disabled');
+    }
+
+    timer(900);
+</script>
+@endpush

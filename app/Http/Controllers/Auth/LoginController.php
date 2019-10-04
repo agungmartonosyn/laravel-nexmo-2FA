@@ -50,7 +50,7 @@ class LoginController extends Controller
         try {
             $verification = Nexmo::verify()->start([
                 'number' => $user->full_number,
-                'brand'  => 'Laravel Nexmo Verify Login',
+                'brand'  => 'Laravel Nexmo',
                 'code_length'  => '4'
             ]);
             $user->request_id = $verification->getRequestId();
